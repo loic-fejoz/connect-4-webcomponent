@@ -1,0 +1,24 @@
+table, td {
+    border: 1px solid black;
+}
+
+table {
+    table-layout: fixed;
+}
+
+td.player0 {
+    background-color: yellow;
+}
+
+td.token-place {
+    border-radius: 50%;
+    padding: 1rem;
+}
+
+td.player1 {
+    background-color: red;
+}
+
+td.player2 {
+    background-color: blue;
+}

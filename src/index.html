@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
+    <title>Connect 4 WebComponent</title>
+
+    <script type="module" src="/build/connect-4-webcomponent.esm.js"></script>
+    <script nomodule src="/build/connect-4-webcomponent.js"></script>
+  </head>
+  <body>
+    <connect-4 />
+  </body>
+  <script>
+    const connect4Element = document.querySelector('connect-4');
+    connect4Element.addEventListener('playerTurn', (event) => { 
+      console.log("Play " + event.detail.player + " played at " + event.detail.column);
+    });
+    connect4Element.addEventListener('alignment', (event) => { 
+      console.log("Player " + event.detail + " has done an alignment." );
+    });
+    connect4Element.addEventListener('gameOver', (event) => { 
+      console.log("Game Over! Winner is " + event.detail);
+    });
+  </script>
+</html>

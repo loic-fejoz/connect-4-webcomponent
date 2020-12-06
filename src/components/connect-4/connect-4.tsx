@@ -1,4 +1,4 @@
-import { Component, Prop, State, Method, h, Event, EventEmitter } from '@stencil/core';
+import { Component, Prop, State, Method, h, Event, EventEmitter, Listen } from '@stencil/core';
 import {PlayerTurn} from './player-turn';
 
 /**
@@ -121,7 +121,7 @@ export class Connect4 {
     }
   }
 
-  didWin(player: number, iStart: number, jStart: number, deltaRow: number, deltaCol: number) {
+  private didWin(player: number, iStart: number, jStart: number, deltaRow: number, deltaCol: number) {
     let i = iStart;
     let j = jStart;
     let count = 0;
@@ -173,5 +173,15 @@ export class Connect4 {
     }
 
     return <table>{rows}</table>
+  }
+
+  @Listen('gameOver')
+  gameOverHandler(event: CustomEvent<number>) {
+    console.log('gameOverHandler');
+    for (let j=0; j < this.col; j++) {
+      if (this.board[j][0] == undefined) {
+        this.board[j][0] = event.detail;
+      }
+    }
   }
 }

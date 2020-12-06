@@ -1,5 +1,5 @@
 import { Component, Prop, State, Method, h, Event, EventEmitter, Listen } from '@stencil/core';
-import {PlayerTurn} from './player-turn';
+import {PlayerMove} from './player-move';
 
 /**
  * Board game called "connect 4" in English
@@ -52,21 +52,26 @@ export class Connect4 {
    */
   @State() currentPlayer: number = 0;
 
-  @Event() playerTurn: EventEmitter<PlayerTurn>;
-
+  @Event() playerMove: EventEmitter<PlayerMove>;
+  @Event() playerTurn: EventEmitter<number>;
   @Event() alignment: EventEmitter<number>;
   @Event() gameOver: EventEmitter<number>;
   
   componentWillLoad() {
     if (this.board === undefined) {
-      this.board = [];
-      for (let j = 0; j < this.col; j++) {
-        let currentCol = [];
-        for (let i = 0; i < this.row; i++) {
-          currentCol[i] = undefined;
-        }
-        this.board[j] = currentCol;
+      this.restart();
+    }
+  }
+
+  @Method()
+  async restart() {
+    this.board = [];
+    for (let j = 0; j < this.col; j++) {
+      let currentCol = [];
+      for (let i = 0; i < this.row; i++) {
+        currentCol[i] = undefined;
       }
+      this.board[j] = currentCol;
     }
   }
 
@@ -92,12 +97,14 @@ export class Connect4 {
     theCol[i] = this.currentPlayer;
     this.board[j] = theCol;
     this.board = [...this.board];
-    let playerTurnData = new PlayerTurn();
-    playerTurnData.column = j;
-    playerTurnData.player = this.currentPlayer;
+    let playerMoveData = new PlayerMove();
+    playerMoveData.column = j;
+    playerMoveData.player = this.currentPlayer;
     this.currentPlayer = (this.currentPlayer + 1) % this.maxPlayers;
-    this.playerTurn.emit(playerTurnData);
-    this.checkGameEnd(playerTurnData.player, i, j);
+    this.playerMove.emit(playerMoveData);
+    if (!this.checkGameEnd(playerMoveData.player, i, j)) {
+      this.playerTurn.emit(this.currentPlayer);
+    }
   }
 
   private checkGameEnd(player: number, i: number, j: number) {
@@ -117,8 +124,10 @@ export class Connect4 {
       //TODO count alignment per player
       if (this.alignmentTarget == 1) {
         this.gameOver.emit(player);
+        return true;
       }
     }
+    return false;
   }
 
   private didWin(player: number, iStart: number, jStart: number, deltaRow: number, deltaCol: number) {
@@ -156,13 +165,14 @@ export class Connect4 {
   }
 
   render() {
-    const rows = [];
+    const hrows = [];
     const cols = [];
     for (let j=0; j < this.col; j++) {
       cols.push(<th><button type='button' disabled={this.isColumnFull(j)} onClick={() => this.currentPlayerPlayAt(j)}>{String.fromCodePoint(65+j)}</button></th>)
     }
-    rows.push(<tr class='controls-row'>{cols}</tr>);
+    hrows.push(<tr class='controls-row'>{cols}</tr>);
     
+    const rows = [];
     for (let i = 0; i < this.row; i++) {
       const cols = [];
       for (let j=0; j < this.col; j++) {
@@ -172,7 +182,11 @@ export class Connect4 {
       rows.push(<tr>{cols}</tr>);
     }
 
-    return <table>{rows}</table>
+    return <table>
+      <thead><slot name='thead' />{hrows}</thead>
+      <tbody>{rows}</tbody>
+      <tfoot><slot name='tfoot' /></tfoot>
+    </table>
   }
 
   @Listen('gameOver')

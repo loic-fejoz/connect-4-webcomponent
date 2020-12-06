@@ -1,5 +1,5 @@
 
-export class PlayerTurn {
+export class PlayerMove {
     player: number;
     column: number;
 }

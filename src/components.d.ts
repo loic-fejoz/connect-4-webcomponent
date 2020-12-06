@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { PlayerTurn } from "./components/connect-4/player-turn";
+import { PlayerMove } from "./components/connect-4/player-move";
 export namespace Components {
     interface Connect4 {
         /**
@@ -25,6 +25,7 @@ export namespace Components {
           * The number of players
          */
         "maxPlayers": number;
+        "restart": () => Promise<void>;
         /**
           * The number of row
          */
@@ -62,7 +63,8 @@ declare namespace LocalJSX {
         "maxPlayers"?: number;
         "onAlignment"?: (event: CustomEvent<number>) => void;
         "onGameOver"?: (event: CustomEvent<number>) => void;
-        "onPlayerTurn"?: (event: CustomEvent<PlayerTurn>) => void;
+        "onPlayerMove"?: (event: CustomEvent<PlayerMove>) => void;
+        "onPlayerTurn"?: (event: CustomEvent<number>) => void;
         /**
           * The number of row
          */

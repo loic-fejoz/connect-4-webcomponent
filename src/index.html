@@ -7,20 +7,38 @@
 
     <script type="module" src="/build/connect-4-webcomponent.esm.js"></script>
     <script nomodule src="/build/connect-4-webcomponent.js"></script>
+    <style>
+      connect-4 {
+        display: block;
+      }
+    </style>
   </head>
   <body>
-    <connect-4 />
+    <button type='button' id='restart'>Restart</button> | <span id='status'>Player turn:&nbsp;<span id='nextPlayer'>Alfred</span></span>
+    <connect-4 id='board1' />
   </body>
   <script>
+    const playersName = ['Alfred', 'Joe'];
     const connect4Element = document.querySelector('connect-4');
-    connect4Element.addEventListener('playerTurn', (event) => { 
-      console.log("Play " + event.detail.player + " played at " + event.detail.column);
+    connect4Element.addEventListener('playerMove', (event) => { 
+      console.log("Player " + playersName[event.detail.player] + " played at " + event.detail.column);
     });
     connect4Element.addEventListener('alignment', (event) => { 
-      console.log("Player " + event.detail + " has done an alignment." );
+      console.log("Player " + playersName[event.detail] + " has done an alignment." );
     });
     connect4Element.addEventListener('gameOver', (event) => { 
-      console.log("Game Over! Winner is " + event.detail);
+      let msg = "Game Over! Winner is player " + playersName[event.detail];
+      console.log(msg);
+      document.querySelector('#status').innerHTML = msg;
+    });
+    connect4Element.addEventListener('playerTurn', (event) => { 
+      console.log("Next player is " + event.detail);
+      document.querySelector('#nextPlayer').innerHTML = playersName[event.detail];
+    });
+    const restartBtn = document.querySelector('#restart');
+    restartBtn.addEventListener('click', (evt) => {
+      document.querySelector('#board1').restart();
+      document.querySelector('#status').innerHTML = "Player turn:&nbsp;<span id='nextPlayer'>Alfred</span>";
     });
   </script>
 </html>

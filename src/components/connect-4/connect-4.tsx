@@ -177,12 +177,12 @@ export class Connect4 {
       const cols = [];
       for (let j=0; j < this.col; j++) {
         let actualStyle = this.getCSSClassFor(i,j);
-        cols.push(<td class={actualStyle}>&nbsp;</td>)
+        cols.push(<td  part={actualStyle} class={actualStyle}>&nbsp;</td>)
       }
       rows.push(<tr>{cols}</tr>);
     }
 
-    return <table>
+    return <table part="board">
       <thead><slot name='thead' />{hrows}</thead>
       <tbody>{rows}</tbody>
       <tfoot><slot name='tfoot' /></tfoot>

@@ -7,9 +7,23 @@
 
     <script type="module" src="/build/connect-4-webcomponent.esm.js"></script>
     <script nomodule src="/build/connect-4-webcomponent.js"></script>
-    <style>
-      connect-4 {
-        display: block;
+    <style rel="stylesheet">
+      :root {
+        --board-border-color: blue;
+      }
+      connect-4::part(board) {
+        border-color: var(--board-border-color);
+        border-width: 2px;
+      }
+      connect-4::part(token-place) {
+        border-width: 2px;
+        border-color: var(--board-border-color);
+      }
+      connect-4::part(player0) {
+          background-color: yellow;
+      }
+      connect-4::part(player1) {
+          background-color: red;
       }
     </style>
   </head>
